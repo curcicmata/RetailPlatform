@@ -7,8 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RetailPlatform.Contracts\RetailPlatform.Contracts.csproj" />
     <ProjectReference Include="..\RetailPlatform.Domain\RetailPlatform.Domain.csproj" />
-    <ProjectReference Include="..\RetailPlatform.Persistence\RetailPlatform.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Carts\Queries\" />
   </ItemGroup>
 
 </Project>

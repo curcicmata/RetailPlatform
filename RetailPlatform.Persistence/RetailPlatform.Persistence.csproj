@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RetailPlatform.Core\RetailPlatform.Core.csproj" />
     <ProjectReference Include="..\RetailPlatform.Domain\RetailPlatform.Domain.csproj" />
   </ItemGroup>
 

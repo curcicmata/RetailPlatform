@@ -14,12 +14,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
     <PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RetailPlatform.Core\RetailPlatform.Core.csproj" />
+    <ProjectReference Include="..\RetailPlatform.Persistence\RetailPlatform.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
