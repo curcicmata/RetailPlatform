@@ -1,13 +1,14 @@
 ﻿using MassTransit;
 using RetailPlatform.Contracts;
 using RetailPlatform.Core.Contracts;
+using RetailPlatform.Core.DTOs;
 using RetailPlatform.Domain.Models;
 
 namespace RetailPlatform.Core.Carts.Commands
 {
-    public class UpsertCartCommandHandler(ICartRepository cartRepository, IPublishEndpoint publish)
+    public class UpsertCartCommandHandler(ICartRepository cartRepository, IPublishEndpoint publish) : IUpsertCartCommandHandler
     {
-        public async Task Handle(UpsertCartCommand command)
+        public async Task<CartDto> HandleAsync(UpsertCartCommand command, CancellationToken cancellationToken = default)
         {
             var existingCart = await cartRepository.GetByUserIdAsync(command.UserId);
             if (existingCart is null)
@@ -35,7 +36,7 @@ namespace RetailPlatform.Core.Carts.Commands
                 });
             }
 
-            await cartRepository.UpsertAsync(existingCart);
+            await cartRepository.UpsertAsync(existingCart, cancellationToken);
 
             await publish.Publish(new CartUpdatedEvent
             {
@@ -47,7 +48,11 @@ namespace RetailPlatform.Core.Carts.Commands
                     Quantity = item.Quantity,
                     Price = item.Price
                 }).ToList()
-            });
+            }, cancellationToken);
+
+            var cartDto = CartDto.CreateDto(existingCart);
+
+            return cartDto;
         }
     }
 }

@@ -2,7 +2,11 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RetailPlatform.Core.Carts.Commands;
+using RetailPlatform.Core.Carts.Queries;
+using RetailPlatform.Core.Contracts;
 using RetailPlatform.Persistence;
+using RetailPlatform.Persistence.Repositories;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +44,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddScoped<IUpsertCartCommandHandler, UpsertCartCommandHandler>();
+builder.Services.AddScoped<IGetCartQueryHandler, GetCartQueryHandler>();
+
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 // MassTransit
 builder.Services.AddMassTransit(x =>
