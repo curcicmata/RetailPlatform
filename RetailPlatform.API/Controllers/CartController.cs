@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RetailPlatform.Core.Carts.Commands.Delete;
 using RetailPlatform.Core.Carts.Commands.Upsert;
 using RetailPlatform.Core.Carts.Queries;
+using RetailPlatform.Core.DTOs;
 
 namespace RetailPlatform.API.Controllers
 {
@@ -19,6 +21,7 @@ namespace RetailPlatform.API.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CartDto))]
         public async Task<IActionResult> Get(Guid userId)
         {
             var query = new GetCartQuery { UserId = userId };
@@ -34,6 +37,9 @@ namespace RetailPlatform.API.Controllers
         /// <param name="ct"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CartDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Upsert([FromBody] UpsertCartCommand command, CancellationToken ct)
         {
             var result = await cartCommandHandler.HandleAsync(command, ct);
@@ -48,6 +54,9 @@ namespace RetailPlatform.API.Controllers
         /// <param name="ct"></param>
         /// <returns></returns>
         [HttpDelete("{cartId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete(Guid cartId, CancellationToken ct)
         {
             var command = new DeleteCartCommand { CartId = cartId };
@@ -64,6 +73,9 @@ namespace RetailPlatform.API.Controllers
         /// <param name="ct"></param>
         /// <returns></returns>
         [HttpDelete("{cartId}/items/{itemId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteItem(Guid cartId, Guid itemId, CancellationToken ct)
         {
             var command = new DeleteCartItemCommand { CartId = cartId, ItemId = itemId };
