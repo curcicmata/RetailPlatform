@@ -2,20 +2,13 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using RetailPlatform.Core.Carts.Commands;
-using RetailPlatform.Core.Carts.Queries;
+using RetailPlatform.Core;
 using RetailPlatform.Core.Contracts;
 using RetailPlatform.Persistence;
 using RetailPlatform.Persistence.Repositories;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-});
 
 // JWT setup
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!);
@@ -44,8 +37,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddScoped<IUpsertCartCommandHandler, UpsertCartCommandHandler>();
-builder.Services.AddScoped<IGetCartQueryHandler, GetCartQueryHandler>();
+builder.Services.AddCore();
 
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 

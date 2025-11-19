@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using RetailPlatform.Core.Contracts;
 using RetailPlatform.Domain.Models;
 
@@ -11,9 +12,11 @@ namespace RetailPlatform.Persistence.Repositories
             await dbContext.Carts.AddAsync(cart);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var cart = await dbContext.Carts.FindAsync(id);
+            var cart = await dbContext.Carts
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (cart is not null)
             {
@@ -49,13 +52,8 @@ namespace RetailPlatform.Persistence.Repositories
         public async Task<Cart> UpsertAsync(Cart cart, CancellationToken cancellationToken = default)
         {
             var existing = await GetByUserIdAsync(cart.UserId);
-
-            if (existing == null)
+            if (existing is null)
             {
-                // Create new cart
-                cart.Id = Guid.NewGuid();
-                cart.UpdatedAt = DateTime.UtcNow;
-
                 await AddAsync(cart);
                 await SaveChangesAsync(cancellationToken);
 
@@ -65,18 +63,12 @@ namespace RetailPlatform.Persistence.Repositories
             // Update existing cart
             existing.UpdatedAt = DateTime.UtcNow;
 
-            // Replace items (simple approach)
-            existing.Items.Clear();
+            dbContext.CartItems.RemoveRange(existing.Items);
+
             foreach (var item in cart.Items)
             {
-                existing.Items.Add(new CartItem
-                {
-                    Id = Guid.NewGuid(),
-                    CartId = existing.Id,
-                    Sku = item.Sku,
-                    Quantity = item.Quantity,
-                    Price = item.Price
-                });
+                item.CartId = existing.Id;
+                dbContext.CartItems.Add(item);
             }
 
             await UpdateAsync(existing);

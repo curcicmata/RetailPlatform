@@ -8,7 +8,7 @@ namespace RetailPlatform.Core.Contracts
         Task<Cart?> GetByIdAsync(Guid id);
         Task AddAsync(Cart cart);
         Task UpdateAsync(Cart cart);
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
         Task<Cart> UpsertAsync(Cart cart, CancellationToken cancellationToken = default);
     }

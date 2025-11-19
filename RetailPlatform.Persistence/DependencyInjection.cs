@@ -7,16 +7,16 @@ namespace RetailPlatform.Persistence
 {
     public static class DependencyInjection
     {
-        public static void MigrateDatabase(this IServiceProvider provider)
-        {
-            using var scope = provider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            dbContext.Database.Migrate();
-        }
-
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
             services.AddScoped<SoftDeleteInterceptor>();
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString).AddInterceptors(new SoftDeleteInterceptor());
+            });
 
 
             return services;
