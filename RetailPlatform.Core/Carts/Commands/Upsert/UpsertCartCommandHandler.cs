@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.Extensions.Logging;
 using RetailPlatform.Contracts;
 using RetailPlatform.Core.Contracts;
 using RetailPlatform.Core.DTOs;
@@ -6,7 +7,7 @@ using RetailPlatform.Domain.Models;
 
 namespace RetailPlatform.Core.Carts.Commands.Upsert
 {
-    public class UpsertCartCommandHandler(ICartRepository cartRepository, IPublishEndpoint publish) : IUpsertCartCommandHandler
+    public class UpsertCartCommandHandler(ICartRepository cartRepository, IPublishEndpoint publish, ILogger<UpsertCartCommandHandler> logger) : IUpsertCartCommandHandler
     {
         public async Task<CartDto> HandleAsync(UpsertCartCommand command, CancellationToken cancellationToken = default)
         {
@@ -47,23 +48,32 @@ namespace RetailPlatform.Core.Carts.Commands.Upsert
                 };
             }
 
-            var savedCart = await cartRepository.UpsertAsync(cart, cancellationToken);
-
-            await publish.Publish(new CartUpdatedEvent
+            try
             {
-                CartId = savedCart.Id,
-                UserId = savedCart.UserId,
-                Items = savedCart.Items.Select(item => new CartItemEventDto
+                var savedCart = await cartRepository.UpsertAsync(cart, cancellationToken);
+
+                await publish.Publish(new CartUpdatedEvent
                 {
-                    Sku = item.Sku,
-                    Quantity = item.Quantity,
-                    Price = item.Price
-                }).ToList()
-            }, cancellationToken);
+                    CartId = savedCart.Id,
+                    UserId = savedCart.UserId,
+                    Items = savedCart.Items.Select(item => new CartItemEventDto
+                    {
+                        Sku = item.Sku,
+                        Quantity = item.Quantity,
+                        Price = item.Price
+                    }).ToList()
+                }, cancellationToken);
 
-            var cartDto = CartDto.CreateDto(savedCart);
+                var cartDto = CartDto.CreateDto(savedCart);
 
-            return cartDto;
+                return cartDto;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error occurred while upserting cart for UserId: {UserId}. Error: {ErrorMessage}", command.UserId, ex.Message);
+                throw;
+            }
+
         }
     }
 }

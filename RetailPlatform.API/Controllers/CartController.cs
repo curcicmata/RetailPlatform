@@ -8,7 +8,7 @@ namespace RetailPlatform.API.Controllers
     [ApiController]
     [Route("[controller]")]
     public class CartController(
-        IGetCartQueryHandler handler, 
+        IGetCartQueryHandler cartQueryHandler, 
         IUpsertCartCommandHandler cartCommandHandler, 
         IDeleteCartCommandHandler deleteCartCommandHandler, 
         IDeleteCartItemCommandHandler deleteCartItemCommandHandler) : ControllerBase
@@ -22,7 +22,7 @@ namespace RetailPlatform.API.Controllers
         public async Task<IActionResult> Get(Guid userId)
         {
             var query = new GetCartQuery { UserId = userId };
-            var result = await handler.HandleAsync(query);
+            var result = await cartQueryHandler.HandleAsync(query);
 
             return Ok(result);
         }
