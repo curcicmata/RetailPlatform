@@ -1,5 +1,4 @@
-﻿using MassTransit;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RetailPlatform.Core.Contracts;
 using RetailPlatform.Domain.Models;
 
