@@ -21,6 +21,9 @@ namespace RetailPlatform.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Cart>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<CartItem>().HasQueryFilter(x => !x.IsDeleted);
+
             modelBuilder.Entity<Cart>(entity =>
             {
                 entity.ToTable("Carts");
