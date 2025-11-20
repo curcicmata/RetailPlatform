@@ -1,0 +1,72 @@
+﻿version: "3.9"
+
+services:
+  retail-api:
+    build:
+      context: .
+      dockerfile: RetailPlatform.API/Dockerfile
+    container_name: retail-api
+    depends_on:
+      sqlserver:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:5000
+      ASPNETCORE_ENVIRONMENT: "Development"
+
+      # SQL Server connection string
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=CartDb;User=sa;Password=Your_strong_password_123;TrustServerCertificate=True;"
+
+      # JWT
+      Jwt__Key: "super_secret_development_jwt_key_123"
+      Jwt__Issuer: "RetailPlatform"
+      Jwt__Audience: "RetailPlatformClients"
+
+      # RabbitMQ
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: "guest"
+      RabbitMq__Password: "guest"
+    ports:
+      - "5000:5000"
+    networks:
+    - retail-network
+    restart: always
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: retail-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Your_strong_password_123"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+        - retail-network
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: retail-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    networks:
+      - retail-network
+    healthcheck:
+        test: rabbitmq-diagnostics -q ping
+        interval: 10s
+        timeout: 5s
+        retries: 5
+    restart: always
+
+volumes:
+  sql_data:
+  
+networks:
+  retail-network:
