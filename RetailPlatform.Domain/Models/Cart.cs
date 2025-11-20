@@ -7,7 +7,7 @@ namespace RetailPlatform.Domain.Models
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public ICollection<CartItem> Items { get; set; } = [];
+        public List<CartItem> Items { get; set; } = [];
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOnUtc { get; set; }
     }
