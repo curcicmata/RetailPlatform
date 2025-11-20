@@ -13,6 +13,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailPlatform.Persistence"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailPlatform.Contracts", "RetailPlatform.Contracts\RetailPlatform.Contracts.csproj", "{8C48A037-856C-4D19-9732-2970DC0AD0EC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailPlatform.UnitTests", "RetailPlatform.UnitTests\RetailPlatform.UnitTests.csproj", "{35D7FBE9-4357-4145-A866-2BFAC4CB4D10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7EEEC46-AF51-4DA3-92C5-AA26B6BCF06C}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +48,16 @@ Global
 		{8C48A037-856C-4D19-9732-2970DC0AD0EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C48A037-856C-4D19-9732-2970DC0AD0EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C48A037-856C-4D19-9732-2970DC0AD0EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D7FBE9-4357-4145-A866-2BFAC4CB4D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D7FBE9-4357-4145-A866-2BFAC4CB4D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D7FBE9-4357-4145-A866-2BFAC4CB4D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D7FBE9-4357-4145-A866-2BFAC4CB4D10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{35D7FBE9-4357-4145-A866-2BFAC4CB4D10} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {51EEF5BF-CA15-4260-9881-B3BDCD427BEF}
