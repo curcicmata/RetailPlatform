@@ -11,5 +11,6 @@ namespace RetailPlatform.Core.Contracts
         Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
         Task<Cart> UpsertAsync(Cart cart, CancellationToken cancellationToken = default);
+        Task<List<Cart>> GetAllAsync();
     }
 }

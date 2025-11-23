@@ -37,6 +37,13 @@ namespace RetailPlatform.Persistence.Repositories
                 .FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
+        public async Task<List<Cart>> GetAllAsync()
+        {
+            return await dbContext.Carts
+                .Include(x => x.Items)
+                .ToListAsync();
+        }
+
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return dbContext.SaveChangesAsync(cancellationToken);

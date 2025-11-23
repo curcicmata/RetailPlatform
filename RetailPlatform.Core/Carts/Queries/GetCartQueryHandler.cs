@@ -16,5 +16,12 @@ namespace RetailPlatform.Core.Carts.Queries
 
             return cartDto;
         }
+
+        public async Task<List<CartDto>> HandleAsync(CancellationToken cancellationToken = default)
+        {
+            var carts = await repository.GetAllAsync();
+            var cartDtos = carts.Select(cart => CartDto.CreateDto(cart)).ToList();
+            return cartDtos;
+        }
     }
 }

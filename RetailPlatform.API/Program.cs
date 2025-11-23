@@ -133,6 +133,7 @@ using (var scope = app.Services.CreateScope())
         if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
         {
             await context.Database.MigrateAsync();
+            await ContextSeed.SeedAsync(context);
         }
 
     }
