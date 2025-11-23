@@ -31,6 +31,18 @@ namespace RetailPlatform.API.Controllers
         }
 
         /// <summary>
+        /// Get all carts
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CartDto>))]
+        public async Task <IActionResult> GetAll()
+        {
+            var result = await cartQueryHandler.HandleAsync();
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Update or insert a new/existing cart for a user
         /// </summary>
         /// <param name="command"></param>
